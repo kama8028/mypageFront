@@ -13,13 +13,13 @@ function MyPage() {
      ecoPoint : ""
    })
 
-   const [myAddress, setMyAddress] = useState({
+   const [myAddress, setMyAddress] = useState([{
       addressId : "",
       memberId : "",
       addressType : "",
       basAddr : "",
       dtlAddr : ""
-   })
+   }])
 
   // useEffect(() => {
   //   axios.get('http://localhost:8080/mypages/'+id).then((res) => {
@@ -40,15 +40,19 @@ function MyPage() {
       //                memberId: res.data.myAddressList[0].memberId,
       //                addressType: res.data.myAddressList[0].addressType,
       //                basAddr: res.data.myAddressList[0].basAddr,
-      //                dtlAddr: res.data.myAddressList[0].dtlAddr})
+      //                dtlAddr: res.data.myAddressList[0].dtlAddr});
+        setMyAddress(...myAddress, res.data.myAddressList);
+
     })
       // console.log(myInfo);
-       //console.log(myAddress);
+      //console.log(myAddress);
       //setMyData(myData, res);
       //console.log(myData);
-    }, [myData]);
+    },[]);
 
-    console.log(myData);
+    console.log(myAddress);
+
+    //console.log(myData);
 
   return (
     <div class="card">
