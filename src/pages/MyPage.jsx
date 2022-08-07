@@ -5,8 +5,6 @@ function MyPage() {
 
   let id = 1;
 
-  const [myData, setMyData] = useState([]);
-
    const [myInfo, setMyInfo] = useState({
      memberId : "",
      name : "",
@@ -32,24 +30,25 @@ function MyPage() {
 
   useEffect(() => {
     axios.get('http://localhost:8080/mypages/'+id).then((res) => {
-      console.log(res);
-      // setMyInfo({memberId: res.data.memberId,
-      //           name: res.data.name,
-      //           email: res.data.email,
-      //           phone: res.data.phone,
-      //           ecoPoint: res.data.ecoPoint});
-      // setMyAddress({addressId: res.data.myAddressList[0].addressId,
-      //               memberId: res.data.myAddressList[0].memberId,
-      //               addressType: res.data.myAddressList[0].addressType,
-      //               basAddr: res.data.myAddressList[0].basAddr,
-      //               dtlAddr: res.data.myAddressList[0].dtlAddr,
-      //             })
+      // console.log(res);
+      // // setMyInfo({memberId: res.data.memberId,
+      // //           name: res.data.name,
+      // //           email: res.data.email,
+      // //           phone: res.data.phone,
+      // //           ecoPoint: res.data.ecoPoint});
+      //  setMyAddress({addressId: res.data.myAddressList[0].addressId,
+      //                memberId: res.data.myAddressList[0].memberId,
+      //                addressType: res.data.myAddressList[0].addressType,
+      //                basAddr: res.data.myAddressList[0].basAddr,
+      //                dtlAddr: res.data.myAddressList[0].dtlAddr})
+    })
       // console.log(myInfo);
-      // console.log(myAddress);
-      setMyData(res);
-      console.log(myData);
-    });
-  }, []);
+       //console.log(myAddress);
+      //setMyData(myData, res);
+      //console.log(myData);
+    }, [myData]);
+
+    console.log(myData);
 
   return (
     <div class="card">
