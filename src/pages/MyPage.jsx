@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import {BrowserRouter, Routes, Route, useParams, Link} from 'react-router-dom';
+import Modal from 'react-modal';
 import axios from 'axios';
 
 function MyPage() {
@@ -45,13 +46,23 @@ function MyPage() {
   ));
 
   function Review() {
-     console.log("리뷰진입");
-     <Link to={'/review/'}></Link>
+      console.log("리뷰진입");
+      return (
+        <>
+        <Modal isOpen={false}>
+          This is Modal content
+          <button onClick={()=> setModalIsOpen(false)}>Modal Open</button>
+        </Modal>
+      </>
+      )
   }
+
+
 
   function Welcome(props) {
     if(props.deliveryStatus==="배송완료")
-    return <Link to={'/review/'}><button onClick={() => Review()}>리뷰등록</button></Link>;
+    //return <Link to={'/review2/'}><button>리뷰등록</button></Link>;
+    return <button onClick={() => Review()}>리뷰등록</button>;
   }
 
   const myOrderComponent = myOrder.map((item, index) => (

@@ -10,7 +10,6 @@ const MyPageButton = (e) => {
 
 function Temp() {
   return (
-    //<Link to={'/myPage'+1}><button onClick={() => MyPageButton()}>마이페이지</button></Link>
     <Link to={'/myPage/'+ 1}><button>마이페이지</button></Link>
   )
 }
