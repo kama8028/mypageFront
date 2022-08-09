@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Temp />} />
-        <Route path="/myPage" element={<MyPage />} />
+        <Route path="/myPage/:id" element={<MyPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
