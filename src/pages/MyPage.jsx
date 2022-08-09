@@ -40,10 +40,15 @@ function MyPage() {
   const myAddressComponent = myAddress.map((item, index) => (
     <tr key={index}>
       <th>{item.addressType}</th>
-      <td>{item.basAddr} {item.basAddr}</td>
+      <td>{item.basAddr} {item.dtlAddr}</td>
     </tr>
   ));
 
+  function Welcome(props) {
+    if(props==="배송완료")
+    return <button>리뷰버튼</button>;
+  }
+  
   const myOrderComponent = myOrder.map((item, index) => (
     item.orderItems.map((item2, index2) => (
       <tr key={index2}>
@@ -51,7 +56,7 @@ function MyPage() {
         <td>{item2.orderItemName}</td>
         <td>{item2.price}</td>
         <td>{item2.qty}</td>
-        <td>{item2.deliveryStatus}</td>
+        <td>{item2.deliveryStatus} <br></br> {Welcome(item2.deliveryStatus)}</td>
       </tr>
     ))
   ));
