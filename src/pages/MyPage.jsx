@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import {BrowserRouter, Routes, Route, useParams} from 'react-router-dom';
+import {BrowserRouter, Routes, Route, useParams, Link} from 'react-router-dom';
 import axios from 'axios';
 
 function MyPage() {
@@ -44,11 +44,16 @@ function MyPage() {
     </tr>
   ));
 
-  function Welcome(props) {
-    if(props==="배송완료")
-    return <button>리뷰버튼</button>;
+  function Review() {
+     console.log("리뷰진입");
+     <Link to={'/review/'}></Link>
   }
-  
+
+  function Welcome(props) {
+    if(props.deliveryStatus==="배송완료")
+    return <Link to={'/review/'}><button onClick={() => Review()}>리뷰등록</button></Link>;
+  }
+
   const myOrderComponent = myOrder.map((item, index) => (
     item.orderItems.map((item2, index2) => (
       <tr key={index2}>
@@ -56,7 +61,7 @@ function MyPage() {
         <td>{item2.orderItemName}</td>
         <td>{item2.price}</td>
         <td>{item2.qty}</td>
-        <td>{item2.deliveryStatus} <br></br> {Welcome(item2.deliveryStatus)}</td>
+        <td>{item2.deliveryStatus} <br></br> {Welcome(item2)}</td>
       </tr>
     ))
   ));
