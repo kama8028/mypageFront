@@ -1,12 +1,6 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {Link} from 'react-router-dom';
 
-const MyPageButton = (e) => {
-  return (
-    window.location.href = "/myPage/"
-
-  )
-}
 
 function Temp() {
   return (

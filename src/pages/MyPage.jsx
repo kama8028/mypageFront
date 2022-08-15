@@ -34,6 +34,7 @@ function MyPage() {
    },[]);
 
   console.log(myInfo);
+  console.log(myInfo.memberId);
   console.log(myAddress);
   console.log(myOrder);
   console.log(myDisposal);
@@ -45,34 +46,22 @@ function MyPage() {
     </tr>
   ));
 
-  function Review() {
-      console.log("리뷰진입");
-      return (
-        <>
-        <Modal isOpen={false}>
-          This is Modal content
-          <button onClick={()=> setModalIsOpen(false)}>Modal Open</button>
-        </Modal>
-      </>
-      )
-  }
-
-
-
-  function Welcome(props) {
-    if(props.deliveryStatus==="배송완료")
-    //return <Link to={'/review2/'}><button>리뷰등록</button></Link>;
-    return <button onClick={() => Review()}>리뷰등록</button>;
+  function Welcome(item, item2) {
+    console.log(item2);
+    console.log(item2.orderItemId);
+    console.log(item2.reviewId);
+    if(item2.deliveryStatus==="배송완료")
+    return <Link to={'/review/'+item2.orderItemId}><button>리뷰등록</button></Link>;
   }
 
   const myOrderComponent = myOrder.map((item, index) => (
     item.orderItems.map((item2, index2) => (
       <tr key={index2}>
         <td>{item.orderDate}</td>
-        <td>{item2.orderItemName}</td>
+        <td>{item2.itemName}</td>
         <td>{item2.price}</td>
         <td>{item2.qty}</td>
-        <td>{item2.deliveryStatus} <br></br> {Welcome(item2)}</td>
+        <td>{item2.deliveryStatus} <br></br> {Welcome(item, item2)}</td>
       </tr>
     ))
   ));
@@ -81,7 +70,7 @@ function MyPage() {
     item.disposalItems.map((item2, index2) => (
       <tr key={index2}>
         <td>{item.disposalDate}</td>
-        <td>{item2.disposalItemName}</td>
+        <td>{item2.recycleItemName}</td>
         <td>{item2.point}P</td>
         <td>{item2.qty}</td>
         <td>{item.branchName}</td>
@@ -133,18 +122,7 @@ function MyPage() {
               </thead>
               <tbody>
                 {myAddressComponent}
-                {/* <tr>
-                  <th>기본1</th>
-                  <td>경기도 성남시 분당구 백현로 206, Eco 아파트 101동 101호</td>
-                </tr>
-                <tr>
-                  <th>기본2</th>
-                  <td>경기도 수원시 팔달구 Eco로 111, 환경아파트 101동 101호</td>
-                </tr>
-                <tr>
-                  <th>직장</th>
-                  <td>경기도 성남시 분당구 수내로 101, 지웰푸르지오 5층</td>
-                </tr> */}
+
               </tbody>
             </table>
           </div>
@@ -163,27 +141,6 @@ function MyPage() {
               </thead>
               <tbody>
                 {myOrderComponent}
-                {/* <tr>
-                  <td>2022-06-17</td>
-                  <td>친환경노트</td>
-                  <td>5,000원</td>
-                  <td>1</td>
-                  <td>배송중</td>
-                </tr>
-                <tr>
-                  <td>2022-05-23</td>
-                  <td>폐타이어가방</td>
-                  <td>70,000원</td>
-                  <td>1</td>
-                  <td>배송완료</td>
-                </tr>
-                <tr>
-                  <td>2022-05-23</td>
-                  <td>친환경비닐봉투</td>
-                  <td>5,000원</td>
-                  <td>1</td>
-                  <td>배송완료</td>
-                </tr> */}
               </tbody>
               </table>
             </div>
@@ -201,41 +158,6 @@ function MyPage() {
               </thead>
               <tbody>
                 {myDisposalComponent}
-                {/* <tr>
-                  <td>2022-05-12</td>
-                  <td>페트병</td>
-                  <td>2,000P</td>
-                  <td>20개</td>
-                  <td>판교지점</td>
-                </tr>
-                <tr>
-                  <td>2022-05-12</td>
-                  <td>유리병</td>
-                  <td>1,000P</td>
-                  <td>5개</td>
-                  <td>판교지점</td>
-                </tr>
-                <tr>
-                  <td>2022-04-30</td>
-                  <td>종이</td>
-                  <td>1,000P</td>
-                  <td>1kg</td>
-                  <td>야탑지점</td>
-                </tr>
-                <tr>
-                  <td>2022-04-30</td>
-                  <td>캔</td>
-                  <td>1,000P</td>
-                  <td>10개</td>
-                  <td>야탑지점</td>
-                </tr>
-                <tr>
-                  <td>2022-04-30</td>
-                  <td>유리병</td>
-                  <td>1,000P</td>
-                  <td>10개</td>
-                  <td>수내지점</td>
-                </tr> */}
               </tbody>
               </table>
         </div>

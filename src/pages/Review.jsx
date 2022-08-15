@@ -1,47 +1,75 @@
 import axios from 'axios';
-import { useState } from 'react'
-import { useParams } from 'react-router-dom';
-
-const Save = (params, e) => {
-  params.satisfactionType = document.getElementById("satisfaction").value
-  params.reviewDescription = document.getElementById("reviewDescription").value
-  params.orderItem.orderItemId = "1"
-  params.orderItem.orderItemName = "친환경노트"
-
-  //console.log(params)
-
-  axios
-  .post('http://localhost:8080/reviews', params)
-  .then((res) => {
-    console.log(res.data);
-  });
-
-}
+import { useEffect, useState } from 'react'
+import { useNavigate , useParams } from 'react-router-dom';
 
 const Review = () => {
-  const { order } = useParams();
 
-  console.log(order);
+  const { orderItemId } = useParams();
 
-  let orderItemName = "친환경노트";
+  useEffect(() => {
+    axios.get('http://localhost:8080/mypages/orderItem/'+orderItemId).then((res) => {
+      console.log(res);
+      setOrderItem({
+          orderItemId: res.data.orderItemId,
+          itemId: res.data.itemId,
+          itemName: res.data.itemName
+      })
+   })
+   },[]);
+
   const [satisfaction, setSatisfaction] = useState("GOOD");
-  const [orderItem, setorderItem] = useState({
-    orderItemId:  "1",
-    orderItemName: "친환경노트"
-  })
 
-  const params = {
-    memberId : "1",
-    orderItem : {orderItem},
+  const [orderItem, setOrderItem] = useState({
+      orderItemId: "",
+      itemId: "",
+      itemName: ""
+  });
+
+  const [review, setReview] = useState({
+    memberId : "",
+    orderItem : "",
     reviewDescription : "",
     satisfactionType : "",
-    reviewDate : new Date()
-  };
+    reviewDate : ""
+  });
 
-  const radioClick = (params) => {
-    //console.log(params)
-    setSatisfaction(params)
-    //console.log(satisfaction)
+  const navigate = useNavigate();
+
+  function handleUseNavigate() {
+    navigate('/myPage/'+review.memberId);
+  }
+
+  //console.log(orderItem);
+
+  const radioClick = (param) => {
+    setSatisfaction(param);
+    console.log(satisfaction)
+  }
+
+  const Save = () => {
+    //params.satisfactionType = document.getElementById("satisfaction").value;
+    //params.satisfactionType = satisfaction;
+
+    setReview({
+        memberId: "1",
+        orderItem: orderItem,
+        reviewDescription: document.getElementById("reviewDescription").value,
+        satisfactionType: satisfaction,
+        reviewDate: new Date()
+      })
+
+   console.log(review);
+
+  }
+
+  const SavePost = () => {
+
+    axios
+    .post('http://localhost:8081/reviews', review)
+    .then((res) => {
+      console.log(res.data);
+    });
+
   }
 
   return (
@@ -52,7 +80,7 @@ const Review = () => {
       <hr></hr>
       <div class="form-floating">
         <textarea class="form-control" type="textarea"></textarea>
-        <label class="form-control" id="orderItemName"><h5><strong>상품명 : {orderItemName}</strong></h5></label>
+        <label class="form-control" id="orderItemName"><h5><strong>상품명 : {orderItem.itemName}</strong></h5></label>
       </div>
       <br></br>
       <div>
@@ -64,11 +92,11 @@ const Review = () => {
       <br></br>
       <strong>리뷰 작성란</strong>&nbsp;&nbsp;
       <div class="form-floating">
-        <textarea class="form-control" placeholder="Leave a comment here" id="reviewDescription"></textarea>
+        <textarea class="form-control" placeholder="Leave a comment here" id="reviewDescription"  onChange={() => {Save(); }}></textarea>
       </div>
       <br></br>
       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button class="btn btn-primary me-md-2" type="button" onClick={() => Save(params)}>저장</button>
+        <button class="btn btn-primary me-md-2" type="button" onClick={() => {SavePost(); handleUseNavigate();}}>저장</button>
       </div>
       </div>
     </>
