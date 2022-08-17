@@ -122,7 +122,6 @@ function MyPage() {
               </thead>
               <tbody>
                 {myAddressComponent}
-
               </tbody>
             </table>
           </div>
