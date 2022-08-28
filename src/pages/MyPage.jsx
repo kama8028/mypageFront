@@ -50,7 +50,7 @@ function MyPage() {
     console.log(item2);
     console.log(item2.orderItemId);
     console.log(item2.reviewId);
-    if(item2.deliveryStatus==="배송완료")
+    if(item.deliveryStatus==="배송완료")
     return <Link to={'/review/'+item2.orderItemId}><button>리뷰등록</button></Link>;
   }
 
@@ -61,7 +61,7 @@ function MyPage() {
         <td>{item2.itemName}</td>
         <td>{item2.price}</td>
         <td>{item2.qty}</td>
-        <td>{item2.deliveryStatus} <br></br> {Welcome(item, item2)}</td>
+        <td>{item.deliveryStatus} <br></br> {Welcome(item, item2)}</td>
       </tr>
     ))
   ));
