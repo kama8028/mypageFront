@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { useNavigate , useParams } from 'react-router-dom';
-
+import ContextAPI from "../ContextAPI";
 
 let good = 0;
 let normal = 0;
@@ -9,7 +9,13 @@ let bad = 0;
 
 const Review = () => {
 
-  let memberId = '1';
+  //글로벌변수(useContext) ==사용 start
+  const context = useContext(ContextAPI);
+  console.log(context);
+  console.log("props called inside of a function", context.memberId);
+  // ======= 사용 end
+
+  //let memberId = '1';
 
   const [g_reviewId, setReviewId] = useState();
   const { orderItemId } = useParams();
@@ -31,9 +37,9 @@ const Review = () => {
   function check(param) {
     console.log(param)
 
-    good = 0;
-    normal = 0;
-    bad = 0;
+    //good = 0;
+    //normal = 0;
+    //bad = 0;
 
     if(param === 'GOOD') good = 1
     else if (param === 'NORMAL') normal = 1
@@ -44,7 +50,8 @@ const Review = () => {
   }
 
   useEffect(() => {
-    axios.get('http://localhost:8080/mypages/orderItem/'+orderItemId).then((res) => {
+    //axios.get('http://localhost:8080/mypages/orderItem/'+orderItemId).then((res) => {
+    axios.get('http://k8s-ecomarke-ecomarke-58be675e99-1138815434.ap-northeast-2.elb.amazonaws.com/mypages/orderItem/'+orderItemId).then((res) => {
       console.log(res);
       setOrderItem({
           orderItemId: res.data.orderItemId,
@@ -55,7 +62,8 @@ const Review = () => {
    },[]);
 
   useEffect(() => {
-    axios.get('http://localhost:8081/reviews/orderItem/'+orderItemId).then((res) => {
+    //axios.get('http://localhost:8081/reviews/orderItem/'+orderItemId).then((res) => {
+    axios.get('http://k8s-ecomarke-ecomarke-58be675e99-1138815434.ap-northeast-2.elb.amazonaws.com/reviews/orderItem/'+orderItemId).then((res) => {
       console.log(orderItemId);
       console.log(res);
       setReview({
@@ -66,18 +74,18 @@ const Review = () => {
         satisfactionType : res.data.satisfactionType,
         reviewDate : res.data.reviewDate
           })
+      setSatisfaction(res.data.satisfactionType)
       setReviewId(res.data.reviewId);
       console.log(g_reviewId);
       check(res.data.satisfactionType);
    })
    },[]);
 
-
-
   const navigate = useNavigate();
 
   function handleUseNavigate() {
-    navigate('/myPage/'+memberId);
+    //navigate('/myPage/'+memberId); context.memberId
+    navigate('/myPage/'+ context.memberId);
   }
 
   //console.log(orderItem);
@@ -97,7 +105,7 @@ const Review = () => {
     //params.satisfactionType = satisfaction;
     console.log(g_reviewId);
     setReview({
-        memberId: "1",
+        memberId: context.memberId,
         reviewId : g_reviewId,
         orderItem: orderItem,
         reviewDescription: document.getElementById("reviewDescription").value,
@@ -111,7 +119,8 @@ const Review = () => {
 
   const SavePost = () => {
     axios
-    .post('http://localhost:8081/reviews', review)
+    //.post('http://localhost:8081/reviews', review)
+    .post('http://k8s-ecomarke-ecomarke-58be675e99-1138815434.ap-northeast-2.elb.amazonaws.com/reviews', review)
     .then((res) => {
       console.log(res.data);
     });
@@ -121,8 +130,10 @@ const Review = () => {
 
   const UpdateReview = () => {
     console.log(review);
+    Save();
     axios
-    .put('http://localhost:8081/reviews', review)
+    //.put('http://localhost:8081/reviews', review)
+    .put('http://k8s-ecomarke-ecomarke-58be675e99-1138815434.ap-northeast-2.elb.amazonaws.com/reviews', review)
     .then((res) => {
       console.log(res.data);
     });
@@ -132,8 +143,10 @@ const Review = () => {
 
   const DeleteReview = () => {
     console.log(review);
+    Save();
     axios
-    .delete('http://localhost:8081/reviews/'+review.reviewId)
+    //.delete('http://localhost:8081/reviews/'+review.reviewId)
+    .delete('http://k8s-ecomarke-ecomarke-58be675e99-1138815434.ap-northeast-2.elb.amazonaws.com/reviews/'+review.reviewId)
     .then((res) => {
       console.log(res.data);
     });
@@ -144,6 +157,7 @@ const Review = () => {
 
   function buttonComponent() {
     console.log(review.reviewId);
+
     if(review.reviewId > 0 ) {
     return (
         <>

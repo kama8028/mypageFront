@@ -1,8 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import {Link} from 'react-router-dom';
+import ContextAPI from "../ContextAPI";
 
 
 function Temp() {
+
+  const context = useContext(ContextAPI);
+  context.memberId = 1;
+
   return (
     <>
     <Link to={'/myPage/'+ 1}><button>마이페이지</button></Link>

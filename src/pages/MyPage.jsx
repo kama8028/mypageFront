@@ -1,9 +1,19 @@
-import { useState, useEffect, useRef } from 'react'
-import {BrowserRouter, Routes, Route, useParams, Link} from 'react-router-dom';
+import { useState, useEffect, useContext, useRef } from 'react'
+import {BrowserRouter, Routes, Route, useParams, Link, useNavigate} from 'react-router-dom';
 import Modal from 'react-modal';
 import axios from 'axios';
+import ContextAPI from "../ContextAPI";
 
 function MyPage() {
+
+  const navigate = useNavigate();
+  //글로벌변수(useContext) ==사용 start
+  const context = useContext(ContextAPI);
+  console.log(context);
+  console.log("props called inside of a function", context.memberEmail, context.memberName, context.memberId, context.memberSalesType);
+  // ======= 사용 end
+
+  //context.memberId = 1;
 
   const { id } = useParams();
 
@@ -12,26 +22,74 @@ function MyPage() {
     name : "",
     email : "",
     phone : "",
-    ecoPoint : ""
+    ecoPoint : "3000"
    })
 
   const [myAddress, setMyAddress] = useState([]);
   const [myOrder, setMyOrder] = useState([]);
   const [myDisposal, setMyDisposal] = useState([]);
 
-  useEffect(() => {
-    axios.get('http://localhost:8080/mypages/'+id).then((res) => {
+//   useEffect(() => {
+//     //axios.get('http://localhost:8080/mypages/'+id).then((res) => {
+//     //axios.get('http://k8s-ecomarke-ecomarke-58be675e99-1138815434.ap-northeast-2.elb.amazonaws.com/mypages/'+id).then((res) => {
+//     axios.get('http://k8s-ecomarke-ecomarke-58be675e99-1138815434.ap-northeast-2.elb.amazonaws.com/members/memberId/'+id).then((res) => {
+//       console.log(res);
+//       setMyInfo({memberId: res.data.id,
+//                 name: res.data.name,
+//                 email: res.data.email,
+//                 //phone: res.data.phone,
+//                 phone: res.data.phoneNumber,
+//                 //ecoPoint: res.data.ecoPoint
+//               });
+//       //setMyAddress(res.data.myAddressList);
+//       setMyOrder(res.data.myOrderDto);
+//       setMyDisposal(res.data.myDisposalDto);
+//    })
+
+// //    axios.get('http://k8s-ecomarke-ecomarke-58be675e99-1138815434.ap-northeast-2.elb.amazonaws.com/mypages/'+id).then((res1) => {
+// //     console.log(res1);
+// //     setMyAddress(res1.data.myAddressList);
+// //     setMyOrder(res1.data.myOrderDto);
+// //     setMyDisposal(res1.data.myDisposalDto);
+// //  })
+// },[]);
+
+useEffect(() => {
+     axios.get('http://k8s-ecomarke-ecomarke-58be675e99-1138815434.ap-northeast-2.elb.amazonaws.com/members/memberId/'+context.memberId).then((res) => {
+       console.log(res);
+       setMyInfo({memberId: res.data.id,
+                 name: res.data.name,
+                 email: res.data.email,
+                 //phone: res.data.phone,
+                 phone: res.data.phoneNumber,
+                 //ecoPoint: res.data.ecoPoint
+                 ecoPoint: '3,000'
+               });
+//       //setMyAddress(res.data.myAddressList);
+//       setMyOrder(res.data.myOrderDto);
+//       setMyDisposal(res.data.myDisposalDto);
+    })
+
+    axios.get('http://k8s-ecomarke-ecomarke-58be675e99-1138815434.ap-northeast-2.elb.amazonaws.com/deliveryAddresses/search/findByMemberId?memberId='+context.memberId+'&projection=with-address').then((res) => {
       console.log(res);
-      setMyInfo({memberId: res.data.memberId,
-                name: res.data.name,
-                email: res.data.email,
-                phone: res.data.phone,
-                ecoPoint: res.data.ecoPoint});
-      setMyAddress(res.data.myAddressList);
-      setMyOrder(res.data.myOrderDto);
-      setMyDisposal(res.data.myDisposalDto);
-   })
-   },[]);
+      setMyAddress(res.data._embedded.deliveryAddresses);
+    });
+
+
+  axios.get('http://k8s-ecomarke-ecomarke-58be675e99-1138815434.ap-northeast-2.elb.amazonaws.com/mypages/'+context.memberId).then((res) => {
+  console.log(res);
+  // setMyInfo({memberId: res.data.id,
+  //           name: res.data.name,
+  //           email: res.data.email,
+  //           phone: res.data.phone,
+  //           phone: res.data.phoneNumber,
+  //           ecoPoint: res.data.ecoPoint
+  //         });
+  //setMyAddress(res.data.myAddressList);
+  setMyOrder(res.data.myOrderDto);
+  setMyDisposal(res.data.myDisposalDto);
+})
+},[]);
 
   console.log(myInfo);
   console.log(myInfo.memberId);
@@ -41,7 +99,9 @@ function MyPage() {
 
   const myAddressComponent = myAddress.map((item, index) => (
     <tr key={index}>
-      <th>{item.addressType}</th>
+      {/* <th>{item.addressType}</th>
+      <td>{item.basAddr} {item.dtlAddr}</td> */}
+      <th>{item.deliveryPlace}</th>
       <td>{item.basAddr} {item.dtlAddr}</td>
     </tr>
   ));
@@ -52,7 +112,7 @@ function MyPage() {
     console.log(item2.reviewId);
     if(item.deliveryStatus==="배송완료")
     return <Link to={'/review/'+item2.orderItemId}><button>리뷰등록</button></Link>;
-  }
+  };
 
   const myOrderComponent = myOrder.map((item, index) => (
     item.orderItems.map((item2, index2) => (
@@ -78,6 +138,14 @@ function MyPage() {
     ))
   ));
 
+  function updateMember(value){
+     navigate('/SaveMember', {state:{value: value}})
+  };
+
+  function updateAddress(){
+    navigate('/deliveryAddress')
+ };
+
   return (
     <div class="card">
       <div class="card-header">
@@ -87,7 +155,7 @@ function MyPage() {
       <div class="card-body">
           <div style={{float:"left", width:"100%"}}>
           <div style={{float:"left", width:"49%"}}>
-            <p style={{float:"left"}}><strong>회원정보</strong></p><button style={{float:"right"}}>정보수정</button>
+            <p style={{float:"left"}}><strong>회원정보</strong></p><button style={{float:"right"}} onClick={()=>updateMember(context.memberId)}>정보수정</button>
             <table class="table table-bordered text-center">
               <thead class="table-secondary">
                 <tr>
@@ -112,7 +180,7 @@ function MyPage() {
             </table>
           </div>
           <div style={{float:"right", width:"49%"}}>
-            <p style={{float:"left"}}><strong>배송지주소</strong></p><button style={{float:"right"}}>정보수정</button>
+            <p style={{float:"left"}}><strong>배송지주소</strong></p><button style={{float:"right"}} onClick={()=>updateAddress()}>정보수정</button>
             <table class="table table-bordered text-center">
               <thead class="table-secondary">
                 <tr>

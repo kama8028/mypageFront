@@ -9,7 +9,7 @@ function ReviewList() {
   const [reviewItem, setReviewItem] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8081/reviews/reviewItem/'+itemId).then((res) => {
+    axios.get('http://k8s-ecomarke-ecomarke-58be675e99-1138815434.ap-northeast-2.elb.amazonaws.com/reviews/reviewItem/'+itemId).then((res) => {
       console.log(res);
       console.log(res.data.length);
       setReviewItem(res.data);
